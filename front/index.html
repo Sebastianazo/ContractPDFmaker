@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang = "es">
+
+<head>
+
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>KingPDF</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
+    <script src='frontscript.js'></script>
+</head>
+
+<body>
+    <header>
+        <h1>PDF Contract Maker</h1>
+    </header>
+
+        <div class="container">
+            <form id="pdfForm" method="POST" action="/generate-pdf" enctype="multipart/form-data">
+                <div>
+                <label for="title">Título:</label><br>
+                <input type="text" id="title" name="title" value = "King Hogar" required><br><br>
+                </div>
+
+                <div>
+                <label for="fecha">Fecha:</label><br>
+                <input id="fecha" type="date" name="Fecha" required></input><br><br>
+                </div>
+
+                <div>
+                <label id= "ClienteLabel" for="Cliente">Cliente:</label><br>
+                <input id="Cliente" type="text" name="Cliente" required></input><br><br>
+                </div>
+
+                <div>
+                <label for="Numero">Numero:</label><br>
+                <input id="Numero" type="text" name="Numero" required></input><br><br>
+                </div>
+
+                <div>
+                  <label for="DNI">DNI:</label><br>
+                    <input id="DNI" type="text" name="DNI" required></input><br><br>
+                </div>
+
+                <div>
+                    <label for="Direccion">Direccion Completa:</label><br>
+                    <input id="Direccion" type="text" name="Direccion" required></input><br><br>
+                </div>
+
+                <div>
+                    <label for="Producto">Producto:</label><br>
+                    <input id="Producto" type="text" name="Producto" required></input><br><br>
+                </div>
+
+                <div>
+                    <label for="Cantidad">Cantidad:</label><br>
+                    <input id="Cantidad" type="text" name="Cantidad" required></input><br><br>
+                </div>
+
+                <div>
+                    <label for="PCuotas">Precio por cuotas:</label><br>
+                    <input id="PCuotas" type="text" name="PCuotas" required></input><br><br>
+                </div>
+
+                <div>
+                    <label for="Cuotas">Cuotas:</label><br>
+                    <input id="Cuotas" type="text" name="Cuotas" required></input><br><br>
+                </div>
+                  
+
+                <button type="submit">Generar PDF</button>
+            </form>
+        </div>
+
+
+
+    
+</body>
+
+<footer>
+    <p style="color: #FFFFFF">Desarrollado por: <a href="https://github.com/Sebastianazo">Sebastianazo</a></p>
+</footer>  
+
+</html>
