@@ -8,6 +8,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const app = express();
 const port = 3000;
+
 app.use(express.static(path.join(__dirname, 'front')));
 
 app.get('/', (req, res) => {
@@ -22,26 +23,32 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
     const productos = [{
         nombreProducto: Producto,
         cantidad: Cantidad,
-        precioCuota: PCuotas,
+        precioCuota: Number(PCuotas),
         subtotal: PCuotas * Cuotas,
         cuotas: Cuotas
     }];
 
     const doc = new PDFDocument({ margin: 50 });
     const filename = `Contrato_${Cliente.replace(/ /g, "_")}.pdf`;
-
-    // Generar el PDF con los datos del formulario
     doc.pipe(res);  // Enviar el PDF directamente como respuesta
 
-    doc.fontSize(20).font('Helvetica-Bold').text(`${title}`, { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).font('Helvetica').text(`Fecha: ${Fecha}`, { align: 'right' }).moveDown();
-    doc.font('Helvetica-Bold').text(`Cliente: ${Cliente}`);
-    doc.moveUp(1);
-    doc.text(`Numero: ${Numero}`, { align: 'center' }); // Alineación centrada
-    doc.text(`DNI: ${DNI}`);
-    doc.moveUp(1);
-    doc.text(`Calle: ${Direccion}`, 240);
+   doc.fontSize(20).font('Helvetica-Bold').text(`${title}`, { align: 'center' });
+doc.moveDown();
+doc.fontSize(12).font('Helvetica').text(`Fecha: ${Fecha}`, { align: 'right' }).moveDown();
+
+let infoStartY = doc.y;
+
+doc.font('Helvetica-Bold').fontSize(12);
+doc.text(`Cliente: ${Cliente}`, 50, infoStartY);
+doc.text(`Numero: ${Numero}`, 250, infoStartY);
+
+infoStartY += 15; // Mover abajo para la siguiente línea
+
+// Dirección y DNI en la misma línea, separados horizontalmente
+doc.text(`Dirección: ${Direccion}`, 50, infoStartY);
+doc.text(`DNI: ${DNI}`, 250, infoStartY);
+
+
 
     doc.moveDown(5);
 
@@ -53,6 +60,11 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
     headers.forEach((text, i) => {
       doc.font('Helvetica-Bold').fontSize(11).text(text, startX + colSpacing[i], currentY);
     });
+
+    const lineY = currentY + 15;
+    doc.moveTo(startX, lineY)
+   .lineTo(startX + colSpacing[colSpacing.length - 1] + 50, lineY) // suma un poco más para que cruce toda la tabla
+   .stroke();
 
     currentY += 20;
 
@@ -70,7 +82,7 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
     doc.y = currentY + 20;
     doc.x = startX;
 
-    doc.moveDown(10);
+    doc.moveDown(7);
 
     doc.moveDown(2);
     const firmaY = doc.y;
@@ -80,7 +92,7 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
 
     doc.x = 20;
 
-    doc.moveDown(14);
+    doc.moveDown(12);
 
     // Aquí comienza la sección de términos y condiciones q me olvide
 
