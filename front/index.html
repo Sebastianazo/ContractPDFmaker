@@ -5,6 +5,7 @@
 
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+
     <title>KingPDF</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
@@ -28,6 +29,9 @@
                 <input id="fecha" type="date" name="Fecha" required></input><br><br>
                 </div>
 
+                <div id = "Scliente">
+
+                
                 <div>
                 <label id= "ClienteLabel" for="Cliente">Cliente:</label><br>
                 <input id="Cliente" type="text" name="Cliente" required></input><br><br>
@@ -48,24 +52,31 @@
                     <input id="Direccion" type="text" name="Direccion" required></input><br><br>
                 </div>
 
+                </div>
+
+                <div id = "Sproducto">
                 <div>
                     <label for="Producto">Producto:</label><br>
-                    <input id="Producto" type="text" name="Producto" required></input><br><br>
+                    <input id="Producto" type="text" name="Producto[]" required></input><br><br>
                 </div>
 
                 <div>
                     <label for="Cantidad">Cantidad:</label><br>
-                    <input id="Cantidad" type="text" name="Cantidad" required></input><br><br>
+                    <input id="Cantidad" type="text" name="Cantidad[]" required></input><br><br>
                 </div>
 
                 <div>
                     <label for="PCuotas">Precio por cuotas:</label><br>
-                    <input id="PCuotas" type="text" name="PCuotas" required></input><br><br>
+                    <input id="PCuotas" type="text" name="PCuotas[]" required></input><br><br>
                 </div>
 
                 <div>
                     <label for="Cuotas">Cuotas:</label><br>
-                    <input id="Cuotas" type="text" name="Cuotas" required></input><br><br>
+                    <input id="Cuotas" type="text" name="Cuotas[]" required></input><br><br>
+                </div>
+
+                <button type="button" id="addProductBtn">Agregar producto</button>
+
                 </div>
                   
 
