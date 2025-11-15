@@ -19,6 +19,33 @@ body {
       flex-direction:column; 
       flex-wrap: wrap;
     }
+
+    .container #Scliente, .container #Sproducto {
+      border: 2px solid #5970ef;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    .sectorProductoTemp {
+      margin-top: 10px;
+      border: 1px solid #444;
+      padding: 5px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .btnEliminarProducto {
+      margin-top: 1px;
+      background-color: #ff4c4c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      float: right;
+    }
     
 
 
