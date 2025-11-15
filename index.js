@@ -18,14 +18,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.post('/generate-pdf', upload.none(), (req, res) => {
-    const { Fecha, title, Cliente, Numero, DNI, Direccion, Producto, Cantidad, PCuotas, Cuotas } = req.body;
-    const productos = [{
-        nombreProducto: Producto,
-        cantidad: Cantidad,
-        precioCuota: Number(PCuotas),
-        subtotal: PCuotas * Cuotas,
-        cuotas: Cuotas
-    }];
+    const { Fecha, title, Cliente, Numero, DNI, Direccion } = req.body;
+    let { Producto, Cantidad, PCuotas, Cuotas } = req.body;
+
+    // Asegurarse de que sean arrays aunque venga un solo producto
+    if (!Array.isArray(Producto)) Producto = [Producto];
+    if (!Array.isArray(Cantidad)) Cantidad = [Cantidad];
+    if (!Array.isArray(PCuotas)) PCuotas = [PCuotas];
+    if (!Array.isArray(Cuotas)) Cuotas = [Cuotas];
+
+    // Construir array de productos
+    const productos = Producto.map((p, i) => ({
+        nombreProducto: p,
+        cantidad: Number(Cantidad[i]),
+        precioCuota: Number(PCuotas[i]),
+        cuotas: Number(Cuotas[i]),
+        subtotal: Number(PCuotas[i]) * Number(Cuotas[i]) 
+    }));
+
+    // Calcular total general
+    const totalGeneral = productos.reduce((sum, p) => sum + p.subtotal, 0);
 
     const doc = new PDFDocument({ margin: 50 });
     const filename = `Contrato_${Cliente.replace(/ /g, "_")}.pdf`;
@@ -38,27 +50,18 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
     doc.moveDown();
     doc.fontSize(12).font('Helvetica').text(`Fecha: ${Fecha}`, { align: 'right' }).moveDown();
 
-    // ========================
-    // Cliente/Dirección/Número/DNI con misma X
-    // ========================
+    // Cliente/Dirección/Número/DNI
     doc.font('Helvetica-Bold').fontSize(12);
-
     let clienteTexto = `Cliente: ${Cliente}`;
     let direccionTexto = `Dirección: ${Direccion}`;
-
-    // Ancho más largo de la columna izquierda
-    let maxIzquierdoWidth = Math.max(
-        doc.widthOfString(clienteTexto),
-        doc.widthOfString(direccionTexto)
-    );
-
-    const minX = 250; // posición mínima para segunda columna
+    let maxIzquierdoWidth = Math.max(doc.widthOfString(clienteTexto), doc.widthOfString(direccionTexto));
+    const minX = 250;
     let segundaColumnaX = Math.max(maxIzquierdoWidth + 60, minX);
-
     let infoStartY = doc.y;
+
     // Fila 1
     doc.text(clienteTexto, 50, infoStartY);
-    doc.text(`Numero: ${Numero}`, segundaColumnaX, infoStartY);
+    doc.text(`Número: ${Numero}`, segundaColumnaX, infoStartY);
 
     // Fila 2
     infoStartY += 15;
@@ -67,9 +70,7 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
 
     doc.moveDown(5);
 
-    // ========================
-    // Tabla
-    // ========================
+    // Tabla de productos
     const startX = 50;
     let currentY = doc.y;
     const colSpacing = [0, 170, 250, 370, 460];
@@ -95,16 +96,18 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
         doc.text(`$${p.precioCuota.toLocaleString()}`, startX + colSpacing[2], currentY);
         doc.text(`$${p.subtotal.toLocaleString()}`, startX + colSpacing[3], currentY);
         doc.text(p.cuotas.toString(), startX + colSpacing[4], currentY);
-        currentY += 20;
+        currentY += 15;
     });
 
-    doc.y = currentY + 20;
-    doc.x = startX;
+    // Total general al final
+    doc.moveDown(1);
+    doc.font('Helvetica-Bold').fontSize(12).text(`TOTAL GENERAL: $${totalGeneral.toLocaleString()}`, startX, currentY + 10);
 
-    doc.moveDown(7);
+    doc.moveDown(5);
 
     // Firmas
     const firmaY = doc.y;
+    doc.font('Helvetica').fontSize(10);
     doc.text("Firma: ", 50, firmaY);
     doc.text("Aclaración: ", 250, firmaY);
     doc.text("DNI: ", 450, firmaY);
@@ -125,7 +128,3 @@ Este contrato se regirá por las disposiciones legales vigentes en la República
 
     doc.end();
 });
-
-//app.listen(port, () => {
-  //  console.log(`Servidor corriendo en http://localhost:${port}`);
-//});
