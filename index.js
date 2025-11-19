@@ -128,3 +128,7 @@ Este contrato se regirá por las disposiciones legales vigentes en la República
 
     doc.end();
 });
+
+app.listen(port, () => {
+    console.log(`Servidor corriendo en http://localhost:${port}`);
+});
