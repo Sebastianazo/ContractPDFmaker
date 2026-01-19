@@ -1,3 +1,4 @@
+// uso de common js, pero se que deberia ser con modules y import
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -37,6 +38,7 @@ app.post('/generate-pdf', upload.none(), (req, res) => {
     }));
 
     // Calcular total general
+    // reduce es el metodo mas efectivo, reduce guarda los valores en sum y los va sumando constantemente cada p.subtotal
     const totalGeneral = productos.reduce((sum, p) => sum + p.subtotal, 0);
 
     const doc = new PDFDocument({ margin: 50 });
@@ -132,3 +134,4 @@ Este contrato se regirá por las disposiciones legales vigentes en la República
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+
